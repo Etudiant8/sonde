@@ -7,8 +7,12 @@ dirigeant qui n'est pas informaticien. Aucune donnée ne quitte la machine du cl
 - Capture et règles d'attaques connues : [Suricata](https://suricata.io) (logiciel libre).
 - Analyse, incidents, interface web, rapport PDF : ce dépôt (Python, SQLite).
 
+**Nouveau sur le projet ? Commencez par [docs/CONTEXTE.md](docs/CONTEXTE.md).**
+
 | Document | Contenu |
 | --- | --- |
+| [docs/CONTEXTE.md](docs/CONTEXTE.md) | D'où vient l'idée, le marché, le concept, comment ça marche, feuille de route, par où commencer |
+| [docs/GUIDE_TEST_RESEAU_PERSO.pdf](docs/GUIDE_TEST_RESEAU_PERSO.pdf) | Tester la sonde sur son propre réseau (3 pages) |
 | [docs/INSTALLATION.md](docs/INSTALLATION.md) | Installer, régler, mettre à jour, désinstaller |
 | [docs/SUIVI_DES_BESOINS.md](docs/SUIVI_DES_BESOINS.md) | État de chaque besoin du cahier, preuve et limites |
 | [docs/MODELES_JURIDIQUES.md](docs/MODELES_JURIDIQUES.md) | Documents à faire signer avant un test (à faire relire par un juriste) |
