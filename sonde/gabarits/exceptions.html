@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titre %}Exceptions{% endblock %}
+{% block contenu %}
+<h1>Exceptions</h1>
+<p class="discret">Les activités que vous avez jugées normales ne sont plus signalées. Supprimez une exception pour être de nouveau alerté.</p>
+<div class="defilement">
+<table>
+  <thead><tr><th>Créée le</th><th>Appareil</th><th>Type de signal</th><th>Précision</th><th>Pourquoi</th><th></th></tr></thead>
+  <tbody>
+  {% for e in exceptions %}
+  <tr><td>{{ e.creee_le | date }}</td><td>{{ e.appareil_nom }}</td><td>{{ e.type }}</td><td>{{ e.cle or '-' }}</td><td>{{ e.commentaire or '-' }}</td>
+    <td><form method="post" action="{{ url_for('exception_supprimer', ident=e.id) }}">
+      <input type="hidden" name="jeton" value="{{ jeton }}"><button class="secondaire petit">Supprimer</button></form></td></tr>
+  {% else %}<tr><td colspan="6" class="discret">Aucune exception.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

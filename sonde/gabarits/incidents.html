@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titre %}Incidents{% endblock %}
+{% block contenu %}
+<h1>Incidents</h1>
+<p>
+  {% if tous %}<a href="{{ url_for('incidents') }}">Voir seulement les incidents en cours</a>
+  {% else %}<a href="{{ url_for('incidents', etat='tous') }}">Voir aussi l'historique</a>{% endif %}
+</p>
+{% for i in incidents %}{% include "_incident.html" %}{% else %}<p class="discret">Aucun incident.</p>{% endfor %}
+{% endblock %}

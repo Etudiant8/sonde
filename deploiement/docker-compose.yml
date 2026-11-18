@@ -1,0 +1,56 @@
+# Sonde installée chez le client : trois conteneurs, aucune donnée ne quitte la machine.
+# Lancé par scripts/installer.sh avec le fichier /etc/sonde/sonde.env.
+name: sonde
+
+x-sonde: &sonde
+  image: sonde:local
+  restart: unless-stopped          # redémarrage automatique après coupure de courant (N8)
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  tmpfs: ["/tmp"]
+  logging: &journaux
+    driver: json-file
+    options: { max-size: "10m", max-file: "3" }
+
+services:
+  suricata:
+    image: sonde-suricata:local
+    restart: unless-stopped
+    network_mode: host             # nécessaire pour écouter la carte reliée au port miroir
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN, NET_RAW, SYS_NICE, CHOWN, DAC_OVERRIDE, SETUID, SETGID]
+    environment:
+      SONDE_INTERFACE: ${SONDE_INTERFACE:?Indiquez la carte reliée au port miroir}
+    volumes:
+      - journaux:/var/log/suricata
+      - regles:/var/lib/suricata
+    logging: *journaux
+
+  sonde:
+    <<: *sonde
+    command: ["surveiller"]
+    volumes:
+      - donnees:/var/lib/sonde
+      - journaux:/var/log/suricata
+      - ${SONDE_REGLAGES:-/etc/sonde}:/etc/sonde:ro
+    healthcheck:
+      test: ["CMD", "sonde", "etat"]
+      interval: 5m
+      timeout: 30s
+      start_period: 45m
+
+  web:
+    <<: *sonde
+    command: ["web", "--adresse", "0.0.0.0:8443",
+              "--certificat", "/etc/sonde/tls/sonde.crt", "--cle", "/etc/sonde/tls/sonde.key"]
+    ports:
+      - "${SONDE_PORT_WEB:-8443}:8443"
+    volumes:
+      - donnees:/var/lib/sonde
+      - ${SONDE_REGLAGES:-/etc/sonde}:/etc/sonde:ro
+
+volumes:
+  donnees:
+  journaux:
+  regles:

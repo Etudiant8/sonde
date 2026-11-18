@@ -1,0 +1,68 @@
+# Réglages de la sonde. Tout est optionnel : une ligne commentée (#) garde la valeur par défaut.
+# Après modification : docker compose restart   (voir docs/INSTALLATION.md)
+
+# ----------------------------------------------------------------- Le client
+nom_client = "Nom du client"
+fuseau = "Indian/Reunion"
+heure_ouverture = 7            # début des heures de travail
+heure_fermeture = 19           # fin des heures de travail
+jours_ouvres = [0, 1, 2, 3, 4] # 0 = lundi ... 6 = dimanche
+# Réseaux considérés comme internes (adresses privées par défaut)
+# reseaux_internes = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fd00::/8", "fe80::/10"]
+
+# -------------------------------------------------------------- Emplacements
+# (ne pas modifier dans l'installation Docker)
+# dossier_donnees = "/var/lib/sonde"
+# dossier_journaux = "/var/log/suricata"
+# journal_eve = "/var/log/suricata/eve-*.json"
+# dossier_zeek = ""            # dossier des journaux JSON de Zeek, si Zeek est installé à côté
+
+# ------------------------------------------------- Apprentissage et incidents
+# apprentissage_heures = 168     # durée d'observation avant de signaler les écarts d'habitude
+# fenetre_incident_minutes = 120 # deux signaux du même appareil dans ce délai = un seul incident
+# fenetre_doublon_heures = 24    # un même signal répété dans ce délai n'est compté qu'une fois
+
+# --------------------------------------------------------- Seuils de détection
+# balayage_fenetre_secondes = 300
+# balayage_machines = 10         # machines différentes essayées sur un même port
+# balayage_ports = 30            # ports différents essayés sur une même machine
+# sortie_plancher_mo = 500       # volume envoyé vers Internet par jour avant alerte (Mo)
+# sortie_facteur = 3.0           # ... ou x fois le volume habituel de l'appareil
+# sortie_jours_min = 3           # jours d'historique nécessaires pour connaître l'habitude
+# hors_heures_plancher_mo = 50   # volume envoyé hors des heures de travail avant alerte (Mo)
+# hors_heures_nuits_habituelles = 2
+# ports_habituels = [53, 80, 123, 443, 465, 587, 993, 995, 853, 5222, 5223, 5228, 8080, 8443, 3478, 3479, 19302]
+# passerelle_max_adresses = 8    # au-delà, une adresse MAC est traitée comme un routeur
+# fichier_pays = ""              # CSV "début,fin,pays" (DB-IP Lite) pour signaler un pays inhabituel
+# fichier_fabricants = ""        # fichier "manuf" de Wireshark pour afficher le fabricant
+
+# ports_non_chiffres = { "21" = "FTP", "23" = "Telnet", "69" = "TFTP", "110" = "POP3", "143" = "IMAP" }
+
+# ---------------------------------------------------------------- Conservation
+# conservation_jours = 90        # durée de garde de l'historique
+# journaux_max_go = 20.0         # place maximale des journaux bruts sur le disque
+
+# ----------------------------------------------------- Surveillance de la sonde
+# silence_max_minutes = 30       # sans trafic pendant ce délai, la sonde se déclare muette
+# url_signal_de_vie = ""         # adresse appelée toutes les 5 minutes pour prouver que la sonde
+                                 # tourne. Sort du réseau du client : accord écrit obligatoire.
+
+# ------------------------------------------- Courriel pour les incidents élevés
+# smtp_serveur = ""
+# smtp_port = 587
+# smtp_tls = true
+# smtp_utilisateur = ""
+# smtp_mot_de_passe = ""
+# courriel_expediteur = ""
+# courriel_destinataires = []
+
+# ------------------------------- Export vers le centre de supervision (SOC)
+# export_fichier = ""            # une alerte JSON par ligne
+# export_syslog_hote = ""
+# export_syslog_port = 514
+# export_syslog_protocole = "udp"   # udp ou tcp
+
+# --------------------------------------------------------------- Interface web
+# web_verrouillage_essais = 5
+# web_verrouillage_minutes = 15
+# web_session_minutes = 60

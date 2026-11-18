@@ -1,0 +1,9 @@
+<article class="incident g{{ i.gravite }}">
+  <div class="entete">
+    <span class="pastille g{{ i.gravite }}">gravité {{ noms_gravite[i.gravite] }}</span>
+    <span class="discret">{{ i.ouvert_le | date }} · {{ noms_etat[i.etat] }}</span>
+  </div>
+  <p class="resume">{{ i.resume }}</p>
+  <p class="conseil"><strong>Que faire :</strong> {{ i.action }}</p>
+  <p><a href="{{ url_for('incident', ident=i.id) }}">Voir le détail</a></p>
+</article>

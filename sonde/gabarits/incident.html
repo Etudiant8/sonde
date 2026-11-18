@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block titre %}Incident n° {{ incident.id }}{% endblock %}
+{% block contenu %}
+<p><a href="{{ url_for('incidents') }}">← Retour aux incidents</a></p>
+<h1>Incident n° {{ incident.id }} <span class="pastille g{{ incident.gravite }}">gravité {{ noms_gravite[incident.gravite] }}</span></h1>
+<p class="discret">Appareil : {{ incident.appareil_nom }} · ouvert le {{ incident.ouvert_le | date }} · dernière activité le {{ incident.maj_le | date }} · {{ noms_etat[incident.etat] }}</p>
+<p class="resume">{{ incident.resume }}</p>
+<p class="conseil"><strong>Que faire :</strong> {{ incident.action }}</p>
+
+<h2>Signaux relevés</h2>
+<div class="defilement">
+<table>
+  <thead><tr><th>Première fois</th><th>Dernière fois</th><th>Nombre</th><th>Gravité</th><th>Ce qui a été vu</th></tr></thead>
+  <tbody>
+  {% for a in alertes %}
+  <tr><td>{{ a.premiere_vue | date }}</td><td>{{ a.derniere_vue | date }}</td><td>{{ a.nombre }}</td>
+      <td>{{ a.gravite_nom }}</td><td class="large">{{ a.texte }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if incident.etat == 'ouvert' %}
+<h2>Votre décision</h2>
+<div class="decisions">
+  <form method="post" action="{{ url_for('incident_resolu', ident=incident.id) }}">
+    <input type="hidden" name="jeton" value="{{ jeton }}">
+    <p>Le problème a été traité.</p>
+    <button>Marquer comme résolu</button>
+  </form>
+  <form method="post" action="{{ url_for('incident_normal', ident=incident.id) }}" class="pile">
+    <input type="hidden" name="jeton" value="{{ jeton }}">
+    <p>C'est une activité normale : ne plus me le signaler pour cet appareil.</p>
+    <label>Pourquoi (facultatif) <input name="commentaire" maxlength="200"></label>
+    <button class="secondaire">C'est normal</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

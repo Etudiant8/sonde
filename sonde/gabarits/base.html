@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titre %}Sonde{% endblock %} · {{ client }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <div class="marque">Sonde réseau <span>{{ client }}</span></div>
+  {% if connecte %}
+  <nav>
+    <a href="{{ url_for('accueil') }}">Tableau de bord</a>
+    <a href="{{ url_for('incidents') }}">Incidents</a>
+    <a href="{{ url_for('appareils') }}">Appareils</a>
+    <a href="{{ url_for('points_faibles') }}">Points faibles</a>
+    <a href="{{ url_for('exceptions') }}">Exceptions</a>
+    <a href="{{ url_for('rapport') }}">Rapport</a>
+    <a href="{{ url_for('compte') }}">Mon compte</a>
+    <form method="post" action="{{ url_for('deconnexion') }}">
+      <input type="hidden" name="jeton" value="{{ jeton }}">
+      <button class="lien">Déconnexion</button>
+    </form>
+  </nav>
+  {% endif %}
+</header>
+<main>
+{% block contenu %}{% endblock %}
+</main>
+</body>
+</html>

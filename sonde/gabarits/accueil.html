@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titre %}Tableau de bord{% endblock %}
+{% block contenu %}
+<section class="etat {{ etat }}">
+  <h1>{{ message }}</h1>
+</section>
+
+{% if sante.muette %}
+<p class="bandeau alerte">La sonde ne reçoit plus de trafic : le réseau n'est pas surveillé en ce moment. Vérifiez le câble du port miroir.</p>
+{% endif %}
+{% if sante.apprentissage %}
+<p class="bandeau">La sonde est en période d'apprentissage{% if sante.fin_apprentissage %} jusqu'au {{ sante.fin_apprentissage | date }}{% endif %} : elle observe les habitudes du réseau et ne signale pas encore tout.</p>
+{% endif %}
+
+<section class="chiffres">
+  <a href="{{ url_for('incidents') }}"><strong>{{ principaux | length + mineurs | length }}</strong> incident(s) en cours</a>
+  <a href="{{ url_for('appareils') }}"><strong>{{ sante.appareils }}</strong> appareil(s), dont {{ nb_inconnus }} à identifier</a>
+  <a href="{{ url_for('points_faibles') }}"><strong>{{ nb_faiblesses }}</strong> point(s) faible(s)</a>
+</section>
+
+<h2>À traiter</h2>
+{% for i in principaux %}{% include "_incident.html" %}{% else %}<p class="discret">Rien à traiter.</p>{% endfor %}
+
+{% if mineurs %}
+<h2>À titre d'information</h2>
+<p class="discret">Signaux faibles, sans urgence. Ils ne changent pas l'état général.</p>
+{% for i in mineurs %}{% include "_incident.html" %}{% endfor %}
+{% endif %}
+{% endblock %}

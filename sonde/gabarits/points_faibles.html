@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titre %}Points faibles{% endblock %}
+{% block contenu %}
+<h1>Points faibles</h1>
+<p class="discret">Ce ne sont pas des attaques, mais des portes laissées entrouvertes. Ils figurent dans le rapport.</p>
+{% for f in faiblesses %}
+<article class="incident g{{ f.gravite }}">
+  <div class="entete"><span class="pastille g{{ f.gravite }}">{{ f.gravite_nom }}</span>
+    <span class="discret">vu la dernière fois le {{ f.derniere_vue | date }}</span></div>
+  <p class="resume">{{ f.texte }}</p>
+  <p class="conseil"><strong>Que faire :</strong> {{ f.conseil }}</p>
+  <form method="post" action="{{ url_for('point_faible_accepter', ident=f.id) }}">
+    <input type="hidden" name="jeton" value="{{ jeton }}">
+    <button class="secondaire petit">C'est voulu, ne plus l'afficher</button>
+  </form>
+</article>
+{% else %}<p class="discret">Aucun point faible relevé.</p>{% endfor %}
+{% endblock %}

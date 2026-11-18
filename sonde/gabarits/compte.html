@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titre %}Mon compte{% endblock %}
+{% block contenu %}
+<section class="etroit">
+  <h1>Changer mon mot de passe</h1>
+  {% if erreur %}<p class="erreur">{{ erreur }}</p>{% endif %}
+  <form method="post" class="pile">
+    <input type="hidden" name="jeton" value="{{ jeton }}">
+    <label>Mot de passe actuel <input name="actuel" type="password" autocomplete="current-password" required></label>
+    <label>Nouveau mot de passe <input name="nouveau" type="password" autocomplete="new-password" minlength="12" required></label>
+    <label>Nouveau mot de passe, une seconde fois <input name="confirmation" type="password" autocomplete="new-password" required></label>
+    <button>Enregistrer</button>
+  </form>
+  <p class="discret">Au moins 12 caractères. Une phrase de plusieurs mots est un bon choix.</p>
+</section>
+{% endblock %}

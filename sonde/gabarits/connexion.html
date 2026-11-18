@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titre %}Connexion{% endblock %}
+{% block contenu %}
+<section class="etroit">
+  <h1>Connexion</h1>
+  {% if erreur %}<p class="erreur">{{ erreur }}</p>{% endif %}
+  <form method="post" class="pile">
+    <input type="hidden" name="jeton" value="{{ jeton }}">
+    <label>Identifiant <input name="identifiant" autocomplete="username" required autofocus></label>
+    <label>Mot de passe <input name="mot_de_passe" type="password" autocomplete="current-password" required></label>
+    <button>Se connecter</button>
+  </form>
+  <p class="discret">Après {{ essais }} essais ratés, le compte est verrouillé pendant {{ minutes }} minutes.</p>
+</section>
+{% endblock %}

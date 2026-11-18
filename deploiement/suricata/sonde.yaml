@@ -1,0 +1,35 @@
+%YAML 1.1
+---
+# Réglages de la sonde, inclus à la fin de la configuration standard de Suricata.
+# Ils remplacent uniquement la section "outputs" : un seul journal JSON (eve.json)
+# qui contient les alertes ET l'activité du réseau (connexions, DNS, TLS, DHCP...).
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve-%Y-%m-%d.json   # un fichier par jour, purgé par la sonde
+      rotate-interval: day
+      community-id: yes
+      ethernet: yes          # adresses MAC, indispensables à l'inventaire
+      types:
+        - alert:
+            tagged-packets: no
+        - flow
+        - dns:
+            version: 2
+        - tls:
+            extended: yes
+        - http:
+            extended: yes
+        - dhcp:
+            enabled: yes
+            extended: yes
+        - files:
+            force-magic: no    # fichiers transférés (nom, taille), sans leur contenu
+        - ssh
+        - smb
+        - ftp
+        - anomaly:
+            enabled: no
+        - stats:
+            enabled: no
