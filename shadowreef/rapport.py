@@ -93,7 +93,7 @@ class _Rapport(FPDF):
         self.set_y(-12)
         self.set_font(self.nom_police, "", 7)
         self.set_text_color(120, 120, 120)
-        self.cell(0, 5, self.t(f"{self.client} - Document confidentiel - page {self.page_no()}"), align="C")
+        self.cell(0, 5, self.t(f"Shadowreef - {self.client} - Document confidentiel - page {self.page_no()}"), align="C")
 
     def titre(self, texte: str) -> None:
         self.ln(3)
@@ -119,7 +119,7 @@ def generer_rapport(sonde, chemin, debut: float, fin: float, maintenant: float, 
         return datetime.fromtimestamp(quand, fuseau).strftime("%d/%m/%Y %H:%M" if heure else "%d/%m/%Y")
 
     pdf = _Rapport(d["client"], _dossier_police() if police == "auto" else police)
-    pdf.set_title(f"Rapport de surveillance réseau - {d['client']}")
+    pdf.set_title(f"Shadowreef - Rapport de surveillance réseau - {d['client']}")
     pdf.add_page()
 
     pdf.set_font(pdf.nom_police, "B", 18)

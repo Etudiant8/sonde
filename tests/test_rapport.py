@@ -2,9 +2,9 @@
 import pytest
 from pypdf import PdfReader
 
-from sonde.alertes import ELEVEE, FAIBLE, MOYENNE
-from sonde.rapport import donnees_rapport, generer_rapport
-from sonde.traitement import Sonde
+from shadowreef.alertes import ELEVEE, FAIBLE, MOYENNE
+from shadowreef.rapport import donnees_rapport, generer_rapport
+from shadowreef.traitement import Sonde
 
 from .conftest import T0
 

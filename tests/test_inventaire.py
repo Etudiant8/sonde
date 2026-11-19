@@ -1,7 +1,7 @@
 """F11/F12 : inventaire des appareils du réseau."""
 import pytest
 
-from sonde.inventaire import Inventaire
+from shadowreef.inventaire import Inventaire
 
 from .conftest import T0
 
@@ -145,7 +145,7 @@ def test_liste_triee_par_derniere_activite(inv):
 
 
 def test_base_persistante(tmp_path, config):
-    from sonde.stockage import Base
+    from shadowreef.stockage import Base
 
     chemin = tmp_path / "p.db"
     b1 = Base(chemin); b1.initialiser()

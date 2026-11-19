@@ -7,10 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from sonde.config import Config, charger
+from shadowreef.config import Config, charger
 
 RACINE = Path(__file__).parent.parent
-EXEMPLE = RACINE / "deploiement" / "sonde.exemple.toml"
+EXEMPLE = RACINE / "deploiement" / "shadowreef.exemple.toml"
 VERIFIER = RACINE / "scripts" / "verifier_version.sh"
 
 
@@ -96,14 +96,14 @@ def test_scripts_syntaxe_valide(script):
 def test_compose_valide():
     resultat = subprocess.run(["docker", "compose", "-f", str(RACINE / "deploiement" / "docker-compose.yml"), "config", "-q"],
                               capture_output=True, text=True,
-                              env={**os.environ, "SONDE_INTERFACE": "eth1"})
+                              env={**os.environ, "SHADOWREEF_INTERFACE": "eth1"})
     assert resultat.returncode == 0, resultat.stderr
 
 
 @pytest.mark.parametrize("nom", ['Cabinet "Hoarau" & Fils', "L'Atelier du Sud | 974", "Société \\ Réunion", "Garage $HOME `id`", "Simple"])
 def test_nom_du_client_ecrit_sans_casser_les_reglages(tmp_path, nom):
     """Le nom saisi à l'installation peut contenir n'importe quel caractère."""
-    destination = tmp_path / "sonde.toml"
+    destination = tmp_path / "shadowreef.toml"
     resultat = subprocess.run(["sh", str(RACINE / "scripts" / "ecrire_reglages.sh"), nom, str(EXEMPLE), str(destination)],
                               capture_output=True, text=True)
     assert resultat.returncode == 0, resultat.stderr
@@ -116,7 +116,7 @@ def test_desinstallation_refuse_un_dossier_qui_n_est_pas_celui_de_la_sonde(tmp_p
     """Garde-fou : une erreur de réglage ne doit jamais faire supprimer autre chose que la sonde."""
     (tmp_path / "important.txt").write_text("à garder")
     resultat = subprocess.run(["sh", str(RACINE / "scripts" / "desinstaller.sh"), "--oui"], capture_output=True, text=True,
-                              env={**os.environ, "SONDE_REGLAGES": str(tmp_path)})
+                              env={**os.environ, "SHADOWREEF_REGLAGES": str(tmp_path)})
     assert resultat.returncode != 0 and "Rien n'a été supprimé" in resultat.stderr
     assert (tmp_path / "important.txt").read_text() == "à garder"
 
@@ -125,5 +125,22 @@ def test_desinstallation_refuse_un_dossier_qui_n_est_pas_celui_de_la_sonde(tmp_p
 @pytest.mark.parametrize("dossier", ["/", "/etc", "/home"])
 def test_desinstallation_refuse_les_dossiers_du_systeme(dossier):
     resultat = subprocess.run(["sh", str(RACINE / "scripts" / "desinstaller.sh"), "--oui"], capture_output=True, text=True,
-                              env={**os.environ, "SONDE_REGLAGES": dossier})
+                              env={**os.environ, "SHADOWREEF_REGLAGES": dossier})
     assert resultat.returncode != 0 and "refusé" in resultat.stderr
+
+
+def test_les_scripts_n_appellent_que_des_services_existants():
+    """Chaque « compose run » ou « compose exec » des scripts vise un service défini dans le fichier Compose."""
+    resultat = subprocess.run(["docker", "compose", "-f", str(RACINE / "deploiement" / "docker-compose.yml"), "config", "--services"],
+                              capture_output=True, text=True, env={**os.environ, "SHADOWREEF_INTERFACE": "eth1"})
+    assert resultat.returncode == 0, resultat.stderr
+    services = set(resultat.stdout.split())
+    assert services == {"suricata", "analyse", "web"}
+    appels = []
+    for script in (RACINE / "scripts").glob("*.sh"):
+        for ligne in script.read_text().splitlines():
+            trouve = re.search(r'\$compose (?:run (?:--\S+ )*(?:-e \S+ )*|exec )(\w+)', ligne)
+            if trouve:
+                appels.append((script.name, trouve.group(1)))
+    assert appels, "aucun appel trouvé : le test ne vérifie plus rien"
+    assert [a for a in appels if a[1] not in services] == []

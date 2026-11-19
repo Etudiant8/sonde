@@ -1,11 +1,15 @@
-# Contexte et concept du projet
+# Shadowreef — contexte et concept du projet
 
 Ce document explique d'où vient le projet, à qui il s'adresse, ce que fait la sonde et pourquoi
 elle est construite ainsi. Il est fait pour quelqu'un qui rejoint le projet.
 
-**En une phrase :** une sonde logicielle installée chez une petite entreprise, qui écoute son
+**En une phrase :** Shadowreef est une sonde logicielle installée chez une petite entreprise, qui écoute son
 réseau, repère ce qui est anormal et l'explique en français clair à un dirigeant qui n'est pas
 informaticien.
+
+**D'où vient le nom :** *shadow* (l'ombre) pour ce qui se cache dans le réseau, dont les appareils
+installés sans que l'entreprise le sache ; *reef* (le récif) pour ce qui est sous la surface, et
+pour La Réunion. Dans les phrases, on continue de dire « la sonde ».
 
 ## Sommaire
 
@@ -33,7 +37,7 @@ employés, près de 10 000 clients, racheté 5,3 milliards de dollars par le fon
 Son principe : au lieu de chercher uniquement des attaques déjà connues, le produit apprend le
 comportement normal de chaque appareil d'une organisation, puis signale les écarts. Trois briques :
 
-| Brique chez Darktrace | Rôle | Équivalent dans notre sonde |
+| Brique chez Darktrace | Rôle | Équivalent dans Shadowreef |
 | --- | --- | --- |
 | Détection | Repérer les anomalies sur le réseau | Détecteurs + période d'apprentissage |
 | Cyber AI Analyst | Relier les alertes et rédiger un rapport lisible | Regroupement en incidents + phrases en français |
@@ -122,7 +126,7 @@ L'état précis de chaque besoin (couvert, partiel, à faire) est dans
 | Profil | Ce qu'il attend | Ce que la sonde lui donne |
 | --- | --- | --- |
 | Dirigeant du client, non technicien | Savoir en une minute si tout va bien, et quoi faire sinon | Tableau de bord vert, orange ou rouge ; une phrase et un conseil par incident ; rapport PDF |
-| Nous (installation et suivi) | Installer vite, peu de fausses alertes, diagnostiquer | Script d'installation, commande `sonde etat`, exceptions, journaux |
+| Nous (installation et suivi) | Installer vite, peu de fausses alertes, diagnostiquer | Script d'installation, commande `shadowreef etat`, exceptions, journaux |
 | Analyste d'un SOC partenaire | Recevoir les alertes dans un format standard | Export JSON et syslog (RFC 5424) |
 
 ## 6. Comment ça marche
@@ -139,7 +143,7 @@ flowchart LR
     A -.->|optionnel| X[Export vers un SOC]
 ```
 
-Trois conteneurs Docker sur la machine du client : `suricata` (capture), `sonde` (analyse, une
+Trois conteneurs Docker sur la machine du client : `suricata` (capture), `shadowreef` (analyse, une
 lecture toutes les 30 secondes), `web` (interface). Rien d'autre.
 
 ### Le parcours d'un événement
@@ -172,7 +176,7 @@ flowchart TD
 | Protocole en clair | Telnet, FTP, POP3, IMAP : mots de passe lisibles sur le réseau | Point faible | F10 |
 | Sonde muette | Plus aucun trafic reçu depuis 30 minutes | Élevée | N9 |
 
-Tous les seuils se règlent dans `/etc/sonde/sonde.toml`.
+Tous les seuils se règlent dans `/etc/shadowreef/shadowreef.toml`.
 
 ### Alerte, incident, point faible, exception
 
@@ -305,13 +309,13 @@ Puis installer la sonde sur son propre réseau en suivant le
 | Chantier | Pourquoi c'est prioritaire | Où regarder |
 | --- | --- | --- |
 | Essai de deux semaines sur un vrai réseau avec port miroir | Rien n'a encore tourné sur du trafic réel | `docs/INSTALLATION.md` |
-| Vérifier les règles Emerging Threats et mesurer leur bruit | Le nombre d'alertes par jour décide de la qualité perçue | `deploiement/suricata/demarrage.sh`, `sonde/detection.py` |
+| Vérifier les règles Emerging Threats et mesurer leur bruit | Le nombre d'alertes par jour décide de la qualité perçue | `deploiement/suricata/demarrage.sh`, `shadowreef/detection.py` |
 | Mesurer la mémoire et le processeur de Suricata | Fixe la configuration minimale à demander au client | `deploiement/docker-compose.yml` |
 | Créer la paire de clés de signature | Sans elle, pas de mise à jour possible chez un client | `scripts/mettre_a_jour.sh` |
 | Solution pour les clients sans port miroir (F2) | Cas fréquent en TPE | À concevoir |
-| Fichiers « fabricant » et « pays » à fournir à l'installation | Deux besoins couverts en partie seulement | `sonde/inventaire.py`, `sonde/pays.py` |
-| Console centrale multi-clients (version 2) | Nécessaire à partir de 3 ou 4 clients, et pour un partenaire | `sonde/export.py` comme point de départ |
-| Faire relire les explications par une personne non technique | C'est le cœur de la promesse | `sonde/explications.py` |
+| Fichiers « fabricant » et « pays » à fournir à l'installation | Deux besoins couverts en partie seulement | `shadowreef/inventaire.py`, `shadowreef/pays.py` |
+| Console centrale multi-clients (version 2) | Nécessaire à partir de 3 ou 4 clients, et pour un partenaire | `shadowreef/export.py` comme point de départ |
+| Faire relire les explications par une personne non technique | C'est le cœur de la promesse | `shadowreef/explications.py` |
 
 **Règle de travail :** un test d'abord, qui échoue, puis le code qui le fait passer. Un défaut
 trouvé en essai réel commence par un test qui le reproduit. Le détail est dans le README.

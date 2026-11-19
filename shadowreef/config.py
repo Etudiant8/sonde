@@ -10,7 +10,7 @@ from pathlib import Path
 @dataclass
 class Config:
     # --- Emplacements ---
-    dossier_donnees: str = "/var/lib/sonde"
+    dossier_donnees: str = "/var/lib/shadowreef"
     journal_eve: str = "/var/log/suricata/eve-*.json"   # un fichier par jour
     dossier_zeek: str = ""                 # vide = Zeek non utilisé
     dossier_journaux: str = "/var/log/suricata"
@@ -91,7 +91,7 @@ class Config:
 
     @property
     def chemin_base(self) -> Path:
-        return Path(self.dossier_donnees) / "sonde.db"
+        return Path(self.dossier_donnees) / "shadowreef.db"
 
 
 def charger(chemin: str | Path | None) -> Config:

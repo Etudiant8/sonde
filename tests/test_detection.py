@@ -4,10 +4,10 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from sonde.alertes import ELEVEE, FAIBLE, MOYENNE, Journal
-from sonde.detection import Detecteurs
-from sonde.inventaire import Inventaire
-from sonde.lecture import Evenement
+from shadowreef.alertes import ELEVEE, FAIBLE, MOYENNE, Journal
+from shadowreef.detection import Detecteurs
+from shadowreef.inventaire import Inventaire
+from shadowreef.lecture import Evenement
 
 MO = 1_000_000
 REUNION = ZoneInfo("Indian/Reunion")
@@ -425,7 +425,7 @@ def test_evenements_techniques_de_suricata_ignores(monde_peuple):
 
 
 def test_fenetre_glissante_ecarte_les_connexions_trop_anciennes():
-    from sonde.detection import _max_distincts
+    from shadowreef.detection import _max_distincts
 
     lignes = [{"quand": t, "v": v} for t, v in [(0, "a"), (100, "b"), (200, "c"), (350, "d"), (360, "a"), (700, "e")]]
     assert _max_distincts(lignes, 300) == 4        # b, c, d, a entre 100 et 360

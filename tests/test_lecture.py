@@ -1,7 +1,7 @@
 """F1/F3 : lecture des journaux Suricata (eve.json) et Zeek (JSON)."""
 import json
 
-from sonde.lecture import lire_ligne_eve, lire_ligne_zeek
+from shadowreef.lecture import lire_ligne_eve, lire_ligne_zeek
 
 from .conftest import T0
 

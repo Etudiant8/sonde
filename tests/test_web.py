@@ -3,10 +3,10 @@ import re
 
 import pytest
 
-from sonde.alertes import ELEVEE, FAIBLE, MOYENNE
-from sonde.comptes import creer_utilisateur
-from sonde.traitement import Sonde
-from sonde.web import creer_application
+from shadowreef.alertes import ELEVEE, FAIBLE, MOYENNE
+from shadowreef.comptes import creer_utilisateur
+from shadowreef.traitement import Sonde
+from shadowreef.web import creer_application
 
 from .conftest import T0
 
@@ -347,7 +347,7 @@ def test_periode_de_rapport_invalide(client):
 # ---------------------------------------------------------------- compte
 
 def test_changer_son_mot_de_passe(client, sonde, config):
-    from sonde.comptes import verifier
+    from shadowreef.comptes import verifier
 
     nouveau = "Letchi-Combava-1946"
     refus = poster(client, "/compte", {"actuel": "faux", "nouveau": nouveau, "confirmation": nouveau})

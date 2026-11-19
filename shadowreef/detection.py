@@ -21,7 +21,7 @@ from .inventaire import Inventaire
 from .lecture import Evenement
 from .stockage import Base
 
-journal_technique = logging.getLogger("sonde.detection")
+journal_technique = logging.getLogger("shadowreef.detection")
 MO = 1_000_000
 
 

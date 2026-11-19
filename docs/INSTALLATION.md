@@ -1,4 +1,4 @@
-# Installer la sonde chez un client
+# Installer Shadowreef chez un client
 
 ## Avant de venir
 
@@ -20,7 +20,7 @@ sudo sh scripts/installer.sh
 ```
 
 Le script pose trois questions (nom du client, carte d'écoute, identifiant du compte), crée les
-réglages dans `/etc/sonde`, génère un certificat HTTPS, construit les images et démarre la sonde.
+réglages dans `/etc/shadowreef`, génère un certificat HTTPS, construit les images et démarre la sonde.
 Il affiche à la fin l'adresse de l'interface et l'empreinte du certificat.
 
 La carte d'écoute ne doit avoir **aucune adresse IP** : elle reçoit seulement. Sur la machine hôte,
@@ -44,21 +44,21 @@ de volume ou d'horaire. Pendant cette semaine :
 Toutes se lancent depuis le dossier du dépôt. Pour alléger :
 
 ```bash
-alias sondectl='docker compose --project-directory deploiement --env-file /etc/sonde/sonde.env -f deploiement/docker-compose.yml'
+alias shadowreefctl='docker compose --project-directory deploiement --env-file /etc/shadowreef/shadowreef.env -f deploiement/docker-compose.yml'
 ```
 
 | Besoin | Commande |
 | --- | --- |
-| État de la sonde | `sondectl exec sonde sonde etat` |
-| Journal de la sonde | `sondectl logs --tail 50 sonde` |
-| Rapport PDF | `sondectl exec sonde sonde rapport --jours 30 --sortie /tmp/rapport.pdf` (ou bouton dans l'interface) |
-| Nouveau compte | `sondectl run --rm --no-deps sonde creer-compte IDENTIFIANT` |
-| Mot de passe oublié | `sondectl run --rm --no-deps sonde mot-de-passe IDENTIFIANT` |
-| Appliquer un réglage modifié | `sondectl restart sonde web` |
+| État de la sonde | `shadowreefctl exec analyse shadowreef etat` |
+| Journal de la sonde | `shadowreefctl logs --tail 50 analyse` |
+| Rapport PDF | `shadowreefctl exec analyse shadowreef rapport --jours 30 --sortie /tmp/rapport.pdf` (ou bouton dans l'interface) |
+| Nouveau compte | `shadowreefctl run --rm --no-deps analyse creer-compte IDENTIFIANT` |
+| Mot de passe oublié | `shadowreefctl run --rm --no-deps analyse mot-de-passe IDENTIFIANT` |
+| Appliquer un réglage modifié | `shadowreefctl restart analyse web` |
 
 ## Réglages
 
-Le fichier `/etc/sonde/sonde.toml` est commenté ligne par ligne. Les plus utiles :
+Le fichier `/etc/shadowreef/shadowreef.toml` est commenté ligne par ligne. Les plus utiles :
 
 - `heure_ouverture`, `heure_fermeture`, `jours_ouvres` : horaires de travail du client ;
 - `smtp_*` et `courriel_destinataires` : courriel pour les incidents de gravité élevée ;
@@ -72,7 +72,7 @@ Une mise à jour est une archive signée par nous. Le script refuse toute archiv
 ne correspond pas à `scripts/cle_publique.pem`.
 
 ```bash
-sudo sh scripts/mettre_a_jour.sh /chemin/sonde-X.Y.Z.tar.gz
+sudo sh scripts/mettre_a_jour.sh /chemin/shadowreef-X.Y.Z.tar.gz
 ```
 
 À faire une seule fois, sur notre poste : créer notre paire de clés. La clé privée ne quitte
@@ -89,7 +89,7 @@ openssl pkey -in cle_privee.pem -pubout -out scripts/cle_publique.pem
 Pour signer une version :
 
 ```bash
-openssl pkeyutl -sign -inkey cle_privee.pem -rawin -in sonde-X.Y.Z.tar.gz -out sonde-X.Y.Z.tar.gz.sig
+openssl pkeyutl -sign -inkey cle_privee.pem -rawin -in shadowreef-X.Y.Z.tar.gz -out shadowreef-X.Y.Z.tar.gz.sig
 ```
 
 Les règles de détection de Suricata se mettent à jour seules, une fois par jour, si la machine a
@@ -119,7 +119,7 @@ sudo sh scripts/desinstaller.sh
 
 | Symptôme | Vérifier |
 | --- | --- |
-| « La sonde ne reçoit plus de trafic » | Câble de la carte d'écoute, réglage du port miroir, `sondectl logs suricata` |
+| « La sonde ne reçoit plus de trafic » | Câble de la carte d'écoute, réglage du port miroir, `shadowreefctl logs suricata` |
 | Aucun appareil après une heure | Le port miroir copie-t-il bien les deux sens du trafic ? |
-| Trop d'incidents | Marquer « C'est normal » ce qui l'est ; relever les seuils dans `sonde.toml` |
-| Interface inaccessible | `sondectl ps`, puis `sondectl logs web` |
+| Trop d'incidents | Marquer « C'est normal » ce qui l'est ; relever les seuils dans `shadowreef.toml` |
+| Interface inaccessible | `shadowreefctl ps`, puis `shadowreefctl logs web` |

@@ -1,8 +1,8 @@
 """F13-F16 : regroupement en incidents, gravité, explication, exceptions."""
 import pytest
 
-from sonde.alertes import ELEVEE, FAIBLE, MOYENNE, Journal
-from sonde.inventaire import Inventaire
+from shadowreef.alertes import ELEVEE, FAIBLE, MOYENNE, Journal
+from shadowreef.inventaire import Inventaire
 
 from .conftest import T0
 

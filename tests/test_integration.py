@@ -10,9 +10,9 @@ from pathlib import Path
 
 import pytest
 
-from sonde.alertes import ELEVEE
-from sonde.config import Config
-from sonde.traitement import Sonde
+from shadowreef.alertes import ELEVEE
+from shadowreef.config import Config
+from shadowreef.traitement import Sonde
 
 from .conftest import T0
 
@@ -22,7 +22,7 @@ pytestmark = pytest.mark.integration
 
 def test_nom_des_journaux_coherent_avec_suricata():
     """Le motif lu par la sonde doit correspondre au nom de fichier que Suricata écrit."""
-    reglages = (RACINE / "deploiement" / "suricata" / "sonde.yaml").read_text()
+    reglages = (RACINE / "deploiement" / "suricata" / "shadowreef.yaml").read_text()
     assert "filename: eve-%Y-%m-%d.json" in reglages
     assert fnmatch.fnmatch("/var/log/suricata/eve-2026-05-28.json", Config().journal_eve)
 
@@ -40,7 +40,7 @@ def journaux_suricata(tmp_path_factory):
     # même montage que dans l'image Docker : configuration standard + nos réglages inclus à la fin
     config = travail / "suricata.yaml"
     config.write_text(Path("/etc/suricata/suricata.yaml").read_text()
-                      + f"\ninclude: {RACINE / 'deploiement' / 'suricata' / 'sonde.yaml'}\n")
+                      + f"\ninclude: {RACINE / 'deploiement' / 'suricata' / 'shadowreef.yaml'}\n")
     sortie = travail / "journaux"; sortie.mkdir()
     resultat = subprocess.run(
         ["suricata", "-c", str(config), "-r", str(capture), "-l", str(sortie), "-k", "none",

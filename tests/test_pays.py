@@ -1,4 +1,4 @@
-from sonde.pays import charger_pays
+from shadowreef.pays import charger_pays
 
 
 def test_recherche_par_plage(tmp_path):

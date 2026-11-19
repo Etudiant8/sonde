@@ -1,7 +1,7 @@
 #!/bin/sh
 # Vérifie qu'une archive de mise à jour a bien été signée par l'éditeur (besoin N7).
-#   verifier_version.sh cle_publique.pem sonde-X.Y.Z.tar.gz
-# La signature attendue est à côté de l'archive : sonde-X.Y.Z.tar.gz.sig (Ed25519).
+#   verifier_version.sh cle_publique.pem shadowreef-X.Y.Z.tar.gz
+# La signature attendue est à côté de l'archive : shadowreef-X.Y.Z.tar.gz.sig (Ed25519).
 set -eu
 
 if [ "$#" -ne 2 ]; then

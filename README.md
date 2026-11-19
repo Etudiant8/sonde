@@ -1,6 +1,6 @@
-# Sonde réseau pour TPE/PME
+# Shadowreef
 
-Sonde logicielle installée **chez le client** : elle écoute le réseau par un port miroir, tient
+**Shadowreef** est une sonde réseau pour TPE/PME, installée **chez le client** : elle écoute le réseau par un port miroir, tient
 l'inventaire des appareils, repère ce qui est anormal et l'explique en français clair à un
 dirigeant qui n'est pas informaticien. Aucune donnée ne quitte la machine du client.
 
@@ -12,7 +12,7 @@ dirigeant qui n'est pas informaticien. Aucune donnée ne quitte la machine du cl
 | Document | Contenu |
 | --- | --- |
 | [docs/CONTEXTE.md](docs/CONTEXTE.md) | D'où vient l'idée, le marché, le concept, comment ça marche, feuille de route, par où commencer |
-| [docs/GUIDE_TEST_RESEAU_PERSO.pdf](docs/GUIDE_TEST_RESEAU_PERSO.pdf) | Tester la sonde sur son propre réseau (3 pages) |
+| [docs/GUIDE_TEST_RESEAU_PERSO.pdf](docs/GUIDE_TEST_RESEAU_PERSO.pdf) | Tester Shadowreef sur son propre réseau (3 pages) |
 | [docs/INSTALLATION.md](docs/INSTALLATION.md) | Installer, régler, mettre à jour, désinstaller |
 | [docs/SUIVI_DES_BESOINS.md](docs/SUIVI_DES_BESOINS.md) | État de chaque besoin du cahier, preuve et limites |
 | [docs/MODELES_JURIDIQUES.md](docs/MODELES_JURIDIQUES.md) | Documents à faire signer avant un test (à faire relire par un juriste) |
@@ -22,24 +22,24 @@ dirigeant qui n'est pas informaticien. Aucune donnée ne quitte la machine du cl
 ```
 port miroir -> Suricata (conteneur) -> journaux eve-AAAA-MM-JJ.json
                                            |
-                 sonde surveiller (conteneur) : lecture -> inventaire -> détecteurs -> incidents
+                 shadowreef surveiller (conteneur) : lecture -> inventaire -> détecteurs -> incidents
                                            |                                    |
                                      base SQLite locale                courriel, export SOC
                                            |
-                 sonde web (conteneur) : interface HTTPS, rapport PDF
+                 shadowreef web (conteneur) : interface HTTPS, rapport PDF
 ```
 
 | Fichier | Rôle |
 | --- | --- |
-| `sonde/lecture.py` | Lit les journaux Suricata (et Zeek en option) |
-| `sonde/inventaire.py` | Appareils : adresses, MAC, nom, fabricant, « connu » |
-| `sonde/detection.py` | Détecteurs : attaque connue, nouvel appareil, balayage, volume, horaires, destinations, points faibles |
-| `sonde/alertes.py` | Regroupe les signaux en incidents, calcule la gravité, gère les exceptions |
-| `sonde/explications.py` | Phrases et conseils en français |
-| `sonde/traitement.py` | Cycle complet, reprise après coupure, santé de la sonde, purge |
-| `sonde/rapport.py`, `notification.py`, `export.py` | PDF, courriel, export JSON/syslog |
-| `sonde/web.py`, `comptes.py` | Interface web et comptes |
-| `sonde/cli.py` | Commande `sonde` |
+| `shadowreef/lecture.py` | Lit les journaux Suricata (et Zeek en option) |
+| `shadowreef/inventaire.py` | Appareils : adresses, MAC, nom, fabricant, « connu » |
+| `shadowreef/detection.py` | Détecteurs : attaque connue, nouvel appareil, balayage, volume, horaires, destinations, points faibles |
+| `shadowreef/alertes.py` | Regroupe les signaux en incidents, calcule la gravité, gère les exceptions |
+| `shadowreef/explications.py` | Phrases et conseils en français |
+| `shadowreef/traitement.py` | Cycle complet, reprise après coupure, santé de la sonde, purge |
+| `shadowreef/rapport.py`, `notification.py`, `export.py` | PDF, courriel, export JSON/syslog |
+| `shadowreef/web.py`, `comptes.py` | Interface web et comptes |
+| `shadowreef/cli.py` | Commande `shadowreef` |
 | `deploiement/`, `scripts/` | Images Docker, installation, mise à jour signée, désinstallation |
 
 ## Développer
@@ -65,7 +65,7 @@ Chaque besoin a ses tests, écrits **avant** le code. Pour ajouter un détecteur
 
 1. écrire dans `tests/test_detection.py` un test qui rejoue des événements et attend l'alerte ;
 2. le voir échouer ;
-3. ajouter le type dans `sonde/explications.py` (phrase + conseil) et la détection dans `sonde/detection.py` ;
+3. ajouter le type dans `shadowreef/explications.py` (phrase + conseil) et la détection dans `shadowreef/detection.py` ;
 4. relancer toute la suite.
 
 Un défaut trouvé en essai réel commence toujours par un test qui le reproduit.

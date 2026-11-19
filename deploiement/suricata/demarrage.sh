@@ -2,7 +2,7 @@
 # Démarre Suricata en écoute seule (N6) et tient les règles de détection à jour (N7).
 set -eu
 
-: "${SONDE_INTERFACE:?Indiquez la carte reliée au port miroir (SONDE_INTERFACE)}"
+: "${SHADOWREEF_INTERFACE:?Indiquez la carte reliée au port miroir (SHADOWREEF_INTERFACE)}"
 
 # La sonde (compte 10001) doit pouvoir lire et purger les journaux
 mkdir -p /var/log/suricata /var/lib/suricata/rules
@@ -21,6 +21,6 @@ fi
 ) &
 
 # Écoute de tout le trafic copié par le commutateur ; la carte n'émet rien
-ip link set "$SONDE_INTERFACE" up promisc on || echo "Impossible d'activer le mode écoute sur $SONDE_INTERFACE"
+ip link set "$SHADOWREEF_INTERFACE" up promisc on || echo "Impossible d'activer le mode écoute sur $SHADOWREEF_INTERFACE"
 
-exec suricata -c /etc/suricata/suricata.yaml -i "$SONDE_INTERFACE" -k none "$@"
+exec suricata -c /etc/suricata/suricata.yaml -i "$SHADOWREEF_INTERFACE" -k none "$@"

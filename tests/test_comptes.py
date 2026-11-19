@@ -1,7 +1,7 @@
 """F19 : comptes de l'interface (mot de passe fort, hachage, verrouillage)."""
 import pytest
 
-from sonde.comptes import MotDePasseRefuse, changer_mot_de_passe, creer_utilisateur, verifier
+from shadowreef.comptes import MotDePasseRefuse, changer_mot_de_passe, creer_utilisateur, verifier
 
 from .conftest import T0
 

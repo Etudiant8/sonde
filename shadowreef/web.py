@@ -244,7 +244,7 @@ def creer_application(config: Config, sonde: Sonde | None = None, horloge: Calla
             os.unlink(chemin)
         import io
 
-        nom = "rapport-sonde-" + datetime.fromtimestamp(maintenant, fuseau).strftime("%Y-%m-%d") + ".pdf"
+        nom = "rapport-shadowreef-" + datetime.fromtimestamp(maintenant, fuseau).strftime("%Y-%m-%d") + ".pdf"
         return send_file(io.BytesIO(contenu), mimetype="application/pdf", as_attachment=True, download_name=nom)
 
     # ----------------------------------------------------------------- compte
@@ -272,5 +272,5 @@ def creer_application(config: Config, sonde: Sonde | None = None, horloge: Calla
 
 
 def application() -> Flask:
-    """Point d'entrée pour gunicorn : ``gunicorn 'sonde.web:application()'``."""
-    return creer_application(charger(os.environ.get("SONDE_CONFIG") or None))
+    """Point d'entrée pour gunicorn : ``gunicorn 'shadowreef.web:application()'``."""
+    return creer_application(charger(os.environ.get("SHADOWREEF_CONFIG") or None))

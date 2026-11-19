@@ -6,10 +6,10 @@ import threading
 
 import pytest
 
-from sonde.alertes import ELEVEE, FAIBLE, MOYENNE
-from sonde.export import Exporteur
-from sonde.notification import Notificateur, envoyer_smtp
-from sonde.traitement import Sonde
+from shadowreef.alertes import ELEVEE, FAIBLE, MOYENNE
+from shadowreef.export import Exporteur
+from shadowreef.notification import Notificateur, envoyer_smtp
+from shadowreef.traitement import Sonde
 
 from .conftest import T0
 
@@ -198,7 +198,7 @@ def test_export_syslog_udp(sonde, config):
     # RFC 5424 : priorité local0.crit = 16*8+2 = 130, version 1
     assert message.startswith("<130>1 2026-05-28T20:26:40+00:00 ")
     entete, _, charge = message.partition(" - - - ")
-    assert " sonde" in entete and json.loads(charge)["type"] == "signature"
+    assert " shadowreef" in entete and json.loads(charge)["type"] == "signature"
 
 
 def test_export_syslog_tcp(sonde, config):
@@ -239,7 +239,7 @@ def test_sans_export_configure_rien_n_est_marque(sonde, config):
 
 
 def test_branchement_sur_le_cycle(config, tmp_path):
-    from sonde.traitement import construire
+    from shadowreef.traitement import construire
 
     config.export_fichier = str(tmp_path / "alertes.json")
     s = construire(config)

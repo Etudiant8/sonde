@@ -16,7 +16,7 @@ from . import __version__
 from .alertes import ELEVEE, MOYENNE
 from .config import Config
 
-journal_technique = logging.getLogger("sonde.export")
+journal_technique = logging.getLogger("shadowreef.export")
 LOCAL0 = 16
 NIVEAU_SYSLOG = {ELEVEE: 2, MOYENNE: 4}      # critique, avertissement ; sinon 5 (notice)
 
@@ -49,7 +49,8 @@ class Exporteur:
         appareil = sonde.inventaire.appareil(alerte["appareil_id"]) if alerte["appareil_id"] is not None else None
         return {
             "horodatage": datetime.fromtimestamp(alerte["derniere_vue"], timezone.utc).isoformat(timespec="seconds"),
-            "sonde": __version__,
+            "produit": "shadowreef",
+            "version": __version__,
             "client": self.config.nom_client,
             "id": alerte["id"],
             "incident": alerte["incident_id"],
@@ -72,7 +73,7 @@ class Exporteur:
     def _vers_syslog(self, fiche: dict, gravite: int) -> None:
         priorite = LOCAL0 * 8 + NIVEAU_SYSLOG.get(gravite, 5)
         hote = socket.gethostname().split()[0] or "-"
-        message = f"<{priorite}>1 {fiche['horodatage']} {hote} sonde - - - {json.dumps(fiche, ensure_ascii=False)}"
+        message = f"<{priorite}>1 {fiche['horodatage']} {hote} shadowreef - - - {json.dumps(fiche, ensure_ascii=False)}"
         cible = (self.config.export_syslog_hote, self.config.export_syslog_port)
         if self.config.export_syslog_protocole == "tcp":
             with socket.create_connection(cible, timeout=10) as cx:

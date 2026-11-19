@@ -1,7 +1,7 @@
 [project]
-name = "sonde"
+name = "shadowreef"
 version = "0.1.0"
-description = "Sonde de détection réseau pour TPE/PME, installée chez le client"
+description = "Shadowreef : sonde de détection réseau pour TPE/PME, installée chez le client"
 requires-python = ">=3.11"
 dependencies = ["flask>=3.0", "fpdf2>=2.7", "gunicorn>=22", "tzdata"]
 
@@ -9,17 +9,17 @@ dependencies = ["flask>=3.0", "fpdf2>=2.7", "gunicorn>=22", "tzdata"]
 dev = ["pytest>=8", "scapy>=2.5"]
 
 [project.scripts]
-sonde = "sonde.cli:main"
+shadowreef = "shadowreef.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["sonde*"]
+include = ["shadowreef*"]
 
 [tool.setuptools.package-data]
-sonde = ["gabarits/*.html", "statique/*"]
+shadowreef = ["gabarits/*.html", "statique/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

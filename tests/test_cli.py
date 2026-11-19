@@ -5,8 +5,8 @@ import subprocess
 
 import pytest
 
-from sonde.cli import main
-from sonde.config import Config, charger
+from shadowreef.cli import main
+from shadowreef.config import Config, charger
 
 from .conftest import T0
 
@@ -17,7 +17,7 @@ BON = "Tamarin-Vanille-2026"
 def reglages(tmp_path):
     donnees = tmp_path / "donnees"
     journaux = tmp_path / "journaux"; journaux.mkdir()
-    fichier = tmp_path / "sonde.toml"
+    fichier = tmp_path / "shadowreef.toml"
     fichier.write_text(f'''
 nom_client = "Cabinet Hoarau"
 dossier_donnees = "{donnees}"
@@ -38,11 +38,11 @@ def test_initialiser_cree_la_base(reglages, capsys):
 
 
 def test_creer_un_compte_par_variable_d_environnement(reglages, monkeypatch, capsys):
-    monkeypatch.setenv("SONDE_MOT_DE_PASSE", BON)
+    monkeypatch.setenv("SHADOWREEF_MOT_DE_PASSE", BON)
     assert lancer(reglages, "creer-compte", "marie") == 0
     assert BON not in capsys.readouterr().out
-    from sonde.comptes import verifier
-    from sonde.stockage import Base
+    from shadowreef.comptes import verifier
+    from shadowreef.stockage import Base
 
     base = Base(charger(reglages).chemin_base)
     assert verifier(base, Config(), "marie", BON, T0) is True
@@ -50,20 +50,20 @@ def test_creer_un_compte_par_variable_d_environnement(reglages, monkeypatch, cap
 
 
 def test_creer_un_compte_mot_de_passe_faible(reglages, monkeypatch, capsys):
-    monkeypatch.setenv("SONDE_MOT_DE_PASSE", "court")
+    monkeypatch.setenv("SHADOWREEF_MOT_DE_PASSE", "court")
     assert lancer(reglages, "creer-compte", "marie") == 2
     assert "12 caractères" in capsys.readouterr().err
 
 
 def test_creer_un_compte_saisie_interactive(reglages, monkeypatch):
-    monkeypatch.delenv("SONDE_MOT_DE_PASSE", raising=False)
+    monkeypatch.delenv("SHADOWREEF_MOT_DE_PASSE", raising=False)
     saisies = iter([BON, BON])
     monkeypatch.setattr("getpass.getpass", lambda invite="": next(saisies))
     assert lancer(reglages, "creer-compte", "marie") == 0
 
 
 def test_creer_un_compte_saisies_differentes(reglages, monkeypatch, capsys):
-    monkeypatch.delenv("SONDE_MOT_DE_PASSE", raising=False)
+    monkeypatch.delenv("SHADOWREEF_MOT_DE_PASSE", raising=False)
     saisies = iter([BON, BON + "x"])
     monkeypatch.setattr("getpass.getpass", lambda invite="": next(saisies))
     assert lancer(reglages, "creer-compte", "marie") == 2
@@ -71,9 +71,9 @@ def test_creer_un_compte_saisies_differentes(reglages, monkeypatch, capsys):
 
 
 def test_changer_le_mot_de_passe_d_un_compte(reglages, monkeypatch):
-    monkeypatch.setenv("SONDE_MOT_DE_PASSE", BON)
+    monkeypatch.setenv("SHADOWREEF_MOT_DE_PASSE", BON)
     lancer(reglages, "creer-compte", "marie")
-    monkeypatch.setenv("SONDE_MOT_DE_PASSE", "Letchi-Combava-1946")
+    monkeypatch.setenv("SHADOWREEF_MOT_DE_PASSE", "Letchi-Combava-1946")
     assert lancer(reglages, "mot-de-passe", "marie") == 0
     assert lancer(reglages, "mot-de-passe", "absent") == 2
 
@@ -124,7 +124,7 @@ def test_effacer_les_donnees_supprime_aussi_les_journaux(reglages, echantillons)
 
 
 def test_reglage_inconnu_signale(tmp_path, capsys):
-    fichier = tmp_path / "sonde.toml"
+    fichier = tmp_path / "shadowreef.toml"
     fichier.write_text('nom_cliant = "faute de frappe"\n')
     assert main(["--config", str(fichier), "verifier-config"]) == 2
     assert "nom_cliant" in capsys.readouterr().err
@@ -147,5 +147,5 @@ def test_version(capsys):
 
 
 def test_commande_installee():
-    resultat = subprocess.run([".venv/bin/python", "-m", "sonde", "--version"], capture_output=True, text=True)
+    resultat = subprocess.run([".venv/bin/python", "-m", "shadowreef", "--version"], capture_output=True, text=True)
     assert resultat.returncode == 0 and "0.1.0" in resultat.stdout

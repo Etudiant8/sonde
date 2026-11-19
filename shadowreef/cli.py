@@ -1,6 +1,6 @@
 """Ligne de commande de la sonde.
 
-    sonde --config /etc/sonde/sonde.toml surveiller
+    shadowreef --config /etc/shadowreef/shadowreef.toml surveiller
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from . import __version__
 from .comptes import MotDePasseRefuse, changer_mot_de_passe, creer_utilisateur
 from .config import Config, charger
 
-CONFIG_PAR_DEFAUT = "/etc/sonde/sonde.toml"
+CONFIG_PAR_DEFAUT = "/etc/shadowreef/shadowreef.toml"
 
 
 def _erreur(message: str) -> int:
@@ -27,8 +27,8 @@ def _erreur(message: str) -> int:
 
 
 def _mot_de_passe() -> str:
-    """Lu dans SONDE_MOT_DE_PASSE (installation automatisée) ou saisi deux fois, sans affichage."""
-    depuis_env = os.environ.get("SONDE_MOT_DE_PASSE")
+    """Lu dans SHADOWREEF_MOT_DE_PASSE (installation automatisée) ou saisi deux fois, sans affichage."""
+    depuis_env = os.environ.get("SHADOWREEF_MOT_DE_PASSE")
     if depuis_env is not None:
         return depuis_env
     premier = getpass.getpass("Mot de passe (12 caractères au moins) : ")
@@ -104,7 +104,7 @@ def cmd_cycle(config: Config, args) -> int:
 def cmd_surveiller(config: Config, args) -> int:
     from .traitement import construire
 
-    journal = logging.getLogger("sonde")
+    journal = logging.getLogger("shadowreef")
     sonde = construire(config)
     arret = {"demande": False}
 
@@ -116,7 +116,7 @@ def cmd_surveiller(config: Config, args) -> int:
             signal.signal(signal_arret, demander_arret)
         except ValueError:          # hors du fil principal (tests)
             pass
-    journal.info("Sonde %s démarrée pour « %s »", __version__, config.nom_client)
+    journal.info("Shadowreef %s démarré pour « %s »", __version__, config.nom_client)
     fait = 0
     try:
         while not arret["demande"]:
@@ -134,7 +134,7 @@ def cmd_surveiller(config: Config, args) -> int:
                 time.sleep(min(0.5, max(0.0, fin - time.monotonic())))
     finally:
         sonde.fermer()
-    journal.info("Sonde arrêtée")
+    journal.info("Shadowreef arrêté")
     return 0
 
 
@@ -148,7 +148,7 @@ def cmd_etat(config: Config, args) -> int:
     finally:
         sonde.fermer()
     silence = sante["dernier_trafic_il_y_a"]
-    print(f"Sonde {sante['version']} - état général : {etat}")
+    print(f"Shadowreef {sante['version']} - état général : {etat}")
     print(f"  {sante['appareils']} appareils, {sante['incidents_ouverts']} incident(s) en cours")
     print("  dernier trafic   : " + ("jamais" if silence is None else f"il y a {silence} s"))
     print("  apprentissage    : " + ("en cours" if sante["apprentissage"] else "terminé"))
@@ -197,13 +197,13 @@ def arguments_gunicorn(args) -> list[str]:
                 "--access-logfile", "-", "--worker-tmp-dir", "/tmp"]
     if args.certificat and args.cle:
         commande += ["--certfile", args.certificat, "--keyfile", args.cle]
-    return commande + ["sonde.web:application()"]
+    return commande + ["shadowreef.web:application()"]
 
 
 def cmd_web(config: Config, args) -> int:
     if not (args.certificat and args.cle) and not args.sans_tls:
         return _erreur("l'interface exige HTTPS : indiquez --certificat et --cle (ou --sans-tls derrière un relais HTTPS).")
-    os.environ["SONDE_CONFIG"] = args.config
+    os.environ["SHADOWREEF_CONFIG"] = args.config
     commande = arguments_gunicorn(args)
     executable = os.path.join(os.path.dirname(sys.executable), "gunicorn")
     os.execv(executable if os.path.isfile(executable) else shutil.which("gunicorn") or "gunicorn", commande)
@@ -213,9 +213,9 @@ def cmd_web(config: Config, args) -> int:
 # ----------------------------------------------------------------------- main
 
 def _analyseur() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="sonde", description="Sonde de détection réseau installée chez le client.")
-    p.add_argument("--version", action="version", version=f"sonde {__version__}")
-    p.add_argument("--config", default=os.environ.get("SONDE_CONFIG", CONFIG_PAR_DEFAUT),
+    p = argparse.ArgumentParser(prog="shadowreef", description="Shadowreef : sonde de détection réseau installée chez le client.")
+    p.add_argument("--version", action="version", version=f"shadowreef {__version__}")
+    p.add_argument("--config", default=os.environ.get("SHADOWREEF_CONFIG", CONFIG_PAR_DEFAUT),
                    help=f"fichier de réglages (défaut : {CONFIG_PAR_DEFAUT})")
     s = p.add_subparsers(dest="commande", required=True, metavar="commande")
     s.add_parser("initialiser", help="crée la base de données").set_defaults(action=cmd_initialiser)

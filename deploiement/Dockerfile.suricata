@@ -6,10 +6,10 @@ RUN apt-get update \
       suricata suricata-update ca-certificates iproute2 \
  && rm -rf /var/lib/apt/lists/*
 
-COPY deploiement/suricata/sonde.yaml /etc/suricata/sonde.yaml
+COPY deploiement/suricata/shadowreef.yaml /etc/suricata/shadowreef.yaml
 COPY deploiement/suricata/demarrage.sh /usr/local/bin/demarrage.sh
 # Nos réglages sont inclus à la fin de la configuration standard : ils la complètent
-RUN echo "include: /etc/suricata/sonde.yaml" >> /etc/suricata/suricata.yaml \
+RUN echo "include: /etc/suricata/shadowreef.yaml" >> /etc/suricata/suricata.yaml \
  && chmod 755 /usr/local/bin/demarrage.sh
 
 ENTRYPOINT ["/usr/local/bin/demarrage.sh"]

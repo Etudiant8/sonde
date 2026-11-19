@@ -1,6 +1,6 @@
 """Chaîne complète de la sonde : lire les journaux, détecter, surveiller, nettoyer.
 
-``Sonde.cycle`` est appelé toutes les 30 secondes par la commande ``sonde
+``Sonde.cycle`` est appelé toutes les 30 secondes par la commande ``shadowreef
 surveiller``. Il reprend la lecture là où il s'était arrêté, même après une
 coupure de courant (N8), car la position de lecture est enregistrée dans la
 même transaction que les événements traités.
@@ -26,7 +26,7 @@ from .lecture import Evenement, lire_ligne_eve, lire_ligne_zeek
 from .pays import charger_pays
 from .stockage import Base
 
-journal_technique = logging.getLogger("sonde")
+journal_technique = logging.getLogger("shadowreef")
 TRANCHE = 4 * 1024 * 1024          # octets lus par tranche
 PERIODE_SIGNAL_DE_VIE = 300        # secondes
 JOURNAUX_ZEEK = ("dhcp", "dns", "conn")

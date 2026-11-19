@@ -1,4 +1,4 @@
-# Suivi des besoins — version 0.1.0
+# Shadowreef — suivi des besoins, version 0.1.0
 
 État de chaque besoin du cahier, avec la preuve et ce qui reste à faire. Trois états :
 **Couvert** (développé et vérifié), **Partiel** (développé, avec une limite), **À faire**.

@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block titre %}Sonde{% endblock %} · {{ client }}</title>
+<title>{% block titre %}Shadowreef{% endblock %} · {{ client }}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header>
-  <div class="marque">Sonde réseau <span>{{ client }}</span></div>
+  <div class="marque">Shadowreef <span>{{ client }}</span></div>
   {% if connecte %}
   <nav>
     <a href="{{ url_for('accueil') }}">Tableau de bord</a>

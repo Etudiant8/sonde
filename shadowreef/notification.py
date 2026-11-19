@@ -10,7 +10,7 @@ from typing import Callable
 from .alertes import ELEVEE
 from .config import Config
 
-journal_technique = logging.getLogger("sonde.notification")
+journal_technique = logging.getLogger("shadowreef.notification")
 
 
 def envoyer_smtp(config: Config, message: EmailMessage) -> None:
@@ -54,11 +54,11 @@ class Notificateur:
         m["From"] = self.config.courriel_expediteur
         m["To"] = ", ".join(self.config.courriel_destinataires)
         m["Subject"] = _une_ligne(
-            f"[Sonde] {self.config.nom_client} : incident de gravité élevée sur {incident['appareil_nom']}")
+            f"[Shadowreef] {self.config.nom_client} : incident de gravité élevée sur {incident['appareil_nom']}")
         m.set_content(
-            f"Bonjour,\n\nLa sonde de {self.config.nom_client} a relevé un incident de gravité élevée.\n\n"
+            f"Bonjour,\n\nShadowreef, la sonde installée chez {self.config.nom_client}, a relevé un incident de gravité élevée.\n\n"
             f"Ce qui s'est passé :\n{incident['resume']}\n\n"
             f"Ce que nous vous conseillons :\n{incident['action']}\n\n"
-            f"Le détail est disponible dans l'interface de la sonde (incident n° {incident['id']}).\n\n"
+            f"Le détail est disponible dans l'interface de Shadowreef (incident n° {incident['id']}).\n\n"
             "Ce message est envoyé automatiquement par la sonde installée dans vos locaux.\n")
         return m

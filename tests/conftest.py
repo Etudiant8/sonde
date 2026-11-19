@@ -17,16 +17,16 @@ def echantillons() -> Path:
 
 @pytest.fixture
 def config():
-    from sonde.config import Config
+    from shadowreef.config import Config
 
     return Config()
 
 
 @pytest.fixture
 def base(tmp_path):
-    from sonde.stockage import Base
+    from shadowreef.stockage import Base
 
-    b = Base(tmp_path / "sonde.db")
+    b = Base(tmp_path / "shadowreef.db")
     b.initialiser()
     yield b
     b.fermer()

@@ -5,8 +5,8 @@ import shutil
 
 import pytest
 
-from sonde.alertes import ELEVEE
-from sonde.traitement import Sonde
+from shadowreef.alertes import ELEVEE
+from shadowreef.traitement import Sonde
 
 from .conftest import T0
 

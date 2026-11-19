@@ -12,7 +12,7 @@ jours_ouvres = [0, 1, 2, 3, 4] # 0 = lundi ... 6 = dimanche
 
 # -------------------------------------------------------------- Emplacements
 # (ne pas modifier dans l'installation Docker)
-# dossier_donnees = "/var/lib/sonde"
+# dossier_donnees = "/var/lib/shadowreef"
 # dossier_journaux = "/var/log/suricata"
 # journal_eve = "/var/log/suricata/eve-*.json"
 # dossier_zeek = ""            # dossier des journaux JSON de Zeek, si Zeek est installé à côté
